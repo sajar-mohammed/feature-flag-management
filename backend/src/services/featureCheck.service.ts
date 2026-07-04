@@ -10,8 +10,9 @@ export const checkFeature = async (
             organizationCode
         );
 
+    // Unknown org → feature cannot be enabled
     if (!organization) {
-        throw new Error("Organization not found");
+        return { enabled: false };
     }
 
     const feature =
@@ -20,6 +21,7 @@ export const checkFeature = async (
             featureKey
         );
 
+    // Unknown feature key → treat as not enabled
     return {
         enabled: feature?.enabled ?? false
     };

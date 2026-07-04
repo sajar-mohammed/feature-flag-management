@@ -4,6 +4,8 @@ import authRouter from "./routes/auth.route.js";
 import organizationRouter from "./routes/organization.route.js";
 import featureFlagRouter from "./routes/featureFlag.route.js";
 import featureCheckRouter from "./routes/featureCheck.route.js";
+import { errorHandler } from "./middleware/error.middleware.js";
+
 const app = express();
 
 app.use(cors());
@@ -21,5 +23,7 @@ app.get("/health", (_, res) => {
     message: "Server is running",
   });
 });
+
+app.use(errorHandler);
 
 export default app;

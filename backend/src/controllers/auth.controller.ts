@@ -1,11 +1,9 @@
 import type { Request, Response } from "express";
 import { superAdminLogin, adminSignup, adminLogin } from "../services/auth.service.js";
+import { asyncHandler } from "../middleware/asyncHandler.middleware.js";
 
-export const loginSuperAdmin = (
-    req: Request,
-    res: Response
-) => {
-    try {
+export const loginSuperAdmin = asyncHandler(
+    (req: Request, res: Response) => {
         const { email, password } = req.body;
 
         const token = superAdminLogin(email, password);
@@ -14,32 +12,14 @@ export const loginSuperAdmin = (
             success: true,
             token,
         });
-    } catch (error) {
-        return res.status(401).json({
-            success: false,
-            message: (error as Error).message,
-        });
     }
-}
+);
 
-export const signupAdmin = async (
-    req: Request,
-    res: Response
-) => {
-    try {
-        const {
-            name,
-            email,
-            password,
-            organizationCode,
-        } = req.body;
+export const signupAdmin = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { name, email, password, organizationCode } = req.body;
 
-        const user = await adminSignup(
-            name,
-            email,
-            password,
-            organizationCode
-        );
+        const user = await adminSignup(name, email, password, organizationCode);
 
         return res.status(201).json({
             success: true,
@@ -51,24 +31,14 @@ export const signupAdmin = async (
                 role: user.role,
             },
         });
-    } catch (error) {
-        return res.status(400).json({
-            success: false,
-            message: (error as Error).message,
-        });
     }
-};
+);
 
-export const loginAdmin = async (
-    req: Request,
-    res: Response
-) => {
-
-    try {
-
+export const loginAdmin = asyncHandler(
+    async (req: Request, res: Response) => {
         const { email, password } = req.body;
 
-        const { user, token } =
+        const { user, token, organizationName, organizationCode } =
             await adminLogin(email, password);
 
         return res.json({
@@ -80,16 +50,9 @@ export const loginAdmin = async (
                 name: user.name,
                 email: user.email,
                 role: user.role,
+                organizationName,
+                organizationCode,
             },
         });
-
-    } catch (error) {
-
-        return res.status(401).json({
-            success: false,
-            message: (error as Error).message,
-        });
-
     }
-
-};
+);

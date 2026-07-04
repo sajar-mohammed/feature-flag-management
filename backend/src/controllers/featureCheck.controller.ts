@@ -1,36 +1,16 @@
 import type { Request, Response } from "express";
 import * as service from "../services/featureCheck.service.js";
+import { asyncHandler } from "../middleware/asyncHandler.middleware.js";
 
-export const checkFeature = async (
-    req: Request,
-    res: Response
-) => {
+export const checkFeature = asyncHandler(
+    async (req: Request, res: Response) => {
+        const { organizationCode, featureKey } = req.body;
 
-    try {
-
-        const {
-            organizationCode,
-            featureKey
-        } = req.body;
-
-        const response =
-            await service.checkFeature(
-                organizationCode,
-                featureKey
-            );
+        const response = await service.checkFeature(organizationCode, featureKey);
 
         return res.json({
             success: true,
             ...response
         });
-
-    } catch (error) {
-
-        return res.status(400).json({
-            success: false,
-            message: (error as Error).message
-        });
-
     }
-
-};
+);

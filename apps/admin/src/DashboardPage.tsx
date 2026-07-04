@@ -17,6 +17,8 @@ interface AdminUser {
   name: string;
   email: string;
   role: string;
+  organizationName?: string;
+  organizationCode?: string;
 }
 
 function formatDate(iso: string) {
@@ -238,9 +240,16 @@ export default function DashboardPage() {
           >
             <Menu className="w-5 h-5" />
           </button>
-          <h2 className="text-xl font-bold text-slate-800 tracking-tight">
-            {activeTab === 'dashboard' ? 'Dashboard' : 'Feature Flags'}
-          </h2>
+          <div className="flex flex-col text-left">
+            <h2 className="text-lg font-bold text-slate-800 tracking-tight leading-none">
+              {activeTab === 'dashboard' ? 'Dashboard' : 'Feature Flags'}
+            </h2>
+            {user.organizationName && (
+              <span className="text-[11px] text-slate-400 font-bold mt-1">
+                {user.organizationName} ({user.organizationCode})
+              </span>
+            )}
+          </div>
           {activeTab === 'flags' && (
             <button
               onClick={openModal}
@@ -269,6 +278,16 @@ export default function DashboardPage() {
           {/* ── Dashboard Tab ─────────────────────────────────────── */}
           {activeTab === 'dashboard' && (
             <div className="max-w-4xl">
+              {/* Organization Header Greeting */}
+              <div className="mb-6 text-left">
+                <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">
+                  {user.organizationName || 'Organization Admin'}
+                </h3>
+                <p className="text-slate-500 text-sm font-medium mt-1">
+                  Active Code: <span className="font-mono font-bold text-indigo-600 bg-indigo-50 px-2 py-0.5 rounded-md border border-indigo-100">{user.organizationCode || 'N/A'}</span> • Manage and deploy feature toggles safely.
+                </p>
+              </div>
+
               {/* Stats row */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 <StatCard
@@ -311,8 +330,8 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Recent flags preview */}
-              {!loading && flags.length > 0 && (
+              {/* Recent flags preview / empty state */}
+              {loading ? null : flags.length > 0 ? (
                 <div>
                   <h3 className="text-base font-bold text-slate-700 mb-4">Recent Flags</h3>
                   <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
@@ -331,6 +350,25 @@ export default function DashboardPage() {
                       </div>
                     )}
                   </div>
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center p-10 bg-white rounded-2xl border border-dashed border-slate-200 text-center gap-4">
+                  <div className="w-14 h-14 rounded-full bg-indigo-50 flex items-center justify-center">
+                    <Flag className="w-7 h-7 text-[#4f46e5]" />
+                  </div>
+                  <div>
+                    <p className="text-slate-700 font-bold text-base">No feature flags yet</p>
+                    <p className="text-slate-400 text-sm font-medium mt-1 max-w-xs">
+                      Create your first feature flag to start toggling features for your organization.
+                    </p>
+                  </div>
+                  <button
+                    onClick={openModal}
+                    className="flex items-center gap-2 px-5 py-2.5 bg-[#4f46e5] hover:bg-[#3e37d0] text-white rounded-xl text-sm font-bold shadow-md shadow-indigo-500/20 transition cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                    Create First Flag
+                  </button>
                 </div>
               )}
             </div>

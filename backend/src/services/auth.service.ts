@@ -84,8 +84,12 @@ export const adminLogin = async (
         email: user.email,
     });
 
+    const org = await organizationRepository.findById(user.organizationId.toString());
+
     return {
         user,
         token,
+        organizationName: org?.name || "",
+        organizationCode: org?.code || "",
     };
 };

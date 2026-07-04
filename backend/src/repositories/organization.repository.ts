@@ -19,3 +19,7 @@ export const getOrganizations = async () => {
 export const findByCode = async (code: string) => {
     return Organization.findOne({ code });
 };
+
+export const findById = async (id: string) => {
+    return Organization.findById(id);
+};
