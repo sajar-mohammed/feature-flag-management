@@ -35,7 +35,6 @@ export default function DashboardPage() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<'dashboard' | 'flags'>('dashboard');
 
-  // User info from localStorage
   const [user] = useState<AdminUser>(() => {
     try {
       return JSON.parse(localStorage.getItem('admin_user') || '{}');
@@ -44,34 +43,27 @@ export default function DashboardPage() {
     }
   });
 
-  // Feature flags state
   const [flags, setFlags] = useState<FeatureFlag[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
 
-  // Search/filter
   const [search, setSearch] = useState('');
   const [filterStatus, setFilterStatus] = useState<'all' | 'enabled' | 'disabled'>('all');
 
-  // Toast
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  // Toggling state — track which flag IDs are being toggled
   const [toggling, setToggling] = useState<Set<string>>(new Set());
 
-  // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [newKey, setNewKey] = useState('');
   const [newEnabled, setNewEnabled] = useState(false);
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState('');
 
-  // ── Auth guard ───────────────────────────────────────────────────────
   useEffect(() => {
     if (!localStorage.getItem('admin_token')) navigate('/');
   }, [navigate]);
 
-  // ── Load flags ───────────────────────────────────────────────────────
   const loadFlags = useCallback(async () => {
     setLoading(true);
     setFetchError('');
@@ -87,26 +79,22 @@ export default function DashboardPage() {
 
   useEffect(() => { loadFlags(); }, [loadFlags]);
 
-  // ── Toast auto-dismiss ───────────────────────────────────────────────
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), 3500);
     return () => clearTimeout(t);
   }, [toast]);
 
-  // ── Logout ───────────────────────────────────────────────────────────
   const handleLogout = () => {
     localStorage.removeItem('admin_token');
     localStorage.removeItem('admin_user');
     navigate('/');
   };
 
-  // ── Toggle flag ──────────────────────────────────────────────────────
   const handleToggle = async (flag: FeatureFlag) => {
     if (toggling.has(flag._id)) return;
     setToggling(prev => new Set(prev).add(flag._id));
 
-    // Optimistic update
     setFlags(prev => prev.map(f => f._id === flag._id ? { ...f, enabled: !f.enabled } : f));
 
     try {
@@ -114,7 +102,6 @@ export default function DashboardPage() {
       setFlags(prev => prev.map(f => f._id === updated._id ? updated : f));
       setToast({ message: `"${updated.featureKey}" ${updated.enabled ? 'enabled' : 'disabled'}`, type: 'success' });
     } catch (err) {
-      // Revert on failure
       setFlags(prev => prev.map(f => f._id === flag._id ? { ...f, enabled: flag.enabled } : f));
       setToast({ message: (err as Error).message, type: 'error' });
     } finally {
@@ -122,7 +109,6 @@ export default function DashboardPage() {
     }
   };
 
-  // ── Create flag ──────────────────────────────────────────────────────
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setCreating(true);
@@ -148,7 +134,6 @@ export default function DashboardPage() {
     setModalOpen(true);
   };
 
-  // ── Filtered flags ───────────────────────────────────────────────────
   const filtered = flags.filter(f => {
     const matchesSearch = f.featureKey.toLowerCase().includes(search.toLowerCase());
     const matchesStatus =
@@ -161,11 +146,9 @@ export default function DashboardPage() {
   const enabledCount = flags.filter(f => f.enabled).length;
   const disabledCount = flags.filter(f => !f.enabled).length;
 
-  // ────────────────────────────────────────────────────────────────────
   return (
     <div className="flex h-screen bg-[#f4f6fb] overflow-hidden font-sans">
 
-      {/* ── Sidebar ─────────────────────────────────────────────────── */}
       {sidebarOpen && (
         <div className="fixed inset-0 bg-black/40 z-20 lg:hidden" onClick={() => setSidebarOpen(false)} />
       )}
@@ -176,7 +159,7 @@ export default function DashboardPage() {
         transition-transform duration-300 ease-in-out
         ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
       `}>
-        {/* Brand */}
+        
         <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
           <div className="w-9 h-9 bg-[#4f46e5] rounded-lg flex items-center justify-center shadow-lg shadow-indigo-900/40">
             <Flag className="w-5 h-5 text-white" />
@@ -187,7 +170,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* User card */}
         <div className="mx-3 mt-4 p-3 bg-white/8 rounded-xl border border-white/10">
           <div className="flex items-center gap-2.5">
             <div className="w-8 h-8 rounded-full bg-[#4f46e5] flex items-center justify-center text-white font-bold text-xs shrink-0">
@@ -200,7 +182,6 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        {/* Nav */}
         <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
           <SideNavItem
             icon={<LayoutDashboard className="w-4 h-4" />}
@@ -217,7 +198,6 @@ export default function DashboardPage() {
           />
         </nav>
 
-        {/* Logout */}
         <div className="px-3 py-4 border-t border-white/10">
           <button
             onClick={handleLogout}
@@ -229,10 +209,8 @@ export default function DashboardPage() {
         </div>
       </aside>
 
-      {/* ── Main ────────────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-        {/* Top bar */}
         <header className="h-[68px] bg-white border-b border-slate-200 flex items-center px-6 gap-4 shrink-0 shadow-sm">
           <button
             onClick={() => setSidebarOpen(true)}
@@ -272,13 +250,11 @@ export default function DashboardPage() {
           )}
         </header>
 
-        {/* Page */}
         <main className="flex-1 overflow-y-auto p-6 lg:p-8">
 
-          {/* ── Dashboard Tab ─────────────────────────────────────── */}
           {activeTab === 'dashboard' && (
             <div className="max-w-4xl">
-              {/* Organization Header Greeting */}
+              
               <div className="mb-6 text-left">
                 <h3 className="text-2xl font-extrabold text-slate-900 tracking-tight">
                   {user.organizationName || 'Organization Admin'}
@@ -288,7 +264,6 @@ export default function DashboardPage() {
                 </p>
               </div>
 
-              {/* Stats row */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-8">
                 <StatCard
                   icon={<Flag className="w-6 h-6 text-[#4f46e5]" />}
@@ -313,7 +288,6 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Quick actions */}
               <h3 className="text-base font-bold text-slate-700 mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mb-8">
                 <QuickAction
@@ -330,7 +304,6 @@ export default function DashboardPage() {
                 />
               </div>
 
-              {/* Recent flags preview / empty state */}
               {loading ? null : flags.length > 0 ? (
                 <div>
                   <h3 className="text-base font-bold text-slate-700 mb-4">Recent Flags</h3>
@@ -374,10 +347,9 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── Flags Tab ──────────────────────────────────────────── */}
           {activeTab === 'flags' && (
             <div>
-              {/* Search + filter bar */}
+              
               <div className="flex flex-col sm:flex-row gap-3 mb-6">
                 <div className="relative flex-1 max-w-md">
                   <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -406,7 +378,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Flags grid */}
               {loading ? (
                 <div className="flex flex-col items-center justify-center py-20 gap-3 text-slate-400">
                   <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
@@ -449,7 +420,6 @@ export default function DashboardPage() {
         </main>
       </div>
 
-      {/* ── Create Flag Modal ───────────────────────────────────────── */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[440px] overflow-hidden">
@@ -471,7 +441,6 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {/* Feature Key */}
               <div className="flex flex-col gap-2 text-left">
                 <label htmlFor="flag-key" className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
                   Feature Key
@@ -488,7 +457,6 @@ export default function DashboardPage() {
                 <p className="text-[11px] text-slate-400 font-medium">Use lowercase letters, numbers, and underscores. Must be unique in your org.</p>
               </div>
 
-              {/* Initial state toggle */}
               <div className="flex items-center justify-between p-4 rounded-xl bg-slate-50 border border-slate-200">
                 <div>
                   <p className="text-sm font-bold text-slate-700">Initial State</p>
@@ -503,7 +471,6 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              {/* Note */}
               <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-indigo-50 border border-indigo-100">
                 <Info className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
                 <p className="text-[11px] text-indigo-600 font-semibold leading-relaxed">
@@ -511,7 +478,6 @@ export default function DashboardPage() {
                 </p>
               </div>
 
-              {/* Actions */}
               <div className="flex gap-3">
                 <button
                   type="button"
@@ -534,7 +500,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Toast ───────────────────────────────────────────────────── */}
       {toast && (
         <div className={`
           fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl text-sm font-semibold
@@ -550,8 +515,6 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-// ─── Sub-components ──────────────────────────────────────────────────────────
 
 function SideNavItem({ icon, label, active, onClick, badge }: {
   icon: React.ReactNode; label: string; active: boolean;
@@ -632,7 +595,7 @@ function FlagCard({ flag, toggling, onToggle }: {
 }) {
   return (
     <div className={`bg-white rounded-2xl border shadow-sm p-5 flex flex-col gap-4 hover:shadow-md transition-all ${flag.enabled ? 'border-slate-100' : 'border-slate-100'}`}>
-      {/* Header */}
+      
       <div className="flex items-start justify-between gap-3">
         <div className="flex-1 min-w-0">
           <div className="flex items-center gap-2 mb-1">
@@ -646,7 +609,6 @@ function FlagCard({ flag, toggling, onToggle }: {
         <ToggleSwitch enabled={flag.enabled} toggling={toggling} onToggle={onToggle} />
       </div>
 
-      {/* Footer */}
       <div className="flex items-center justify-between pt-3 border-t border-slate-100">
         <span className="text-[11px] text-slate-400 font-medium">Created {formatDate(flag.createdAt)}</span>
         {flag.enabled

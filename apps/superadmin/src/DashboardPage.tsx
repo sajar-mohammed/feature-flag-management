@@ -21,8 +21,6 @@ import {
   type Organization,
 } from './api';
 
-// ─── Helpers ─────────────────────────────────────────────────────────────────
-
 function formatDate(iso: string): string {
   return new Date(iso).toLocaleDateString('en-US', {
     month: 'short',
@@ -33,45 +31,35 @@ function formatDate(iso: string): string {
 
 const PAGE_SIZE = 5;
 
-// ─── Dashboard ───────────────────────────────────────────────────────────────
-
 export default function DashboardPage() {
   const navigate = useNavigate();
 
-  // Sidebar toggle for mobile
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-  // Active nav tab
   const [activeTab, setActiveTab] = useState<'dashboard' | 'organizations'>('dashboard');
 
-  // Organizations state
   const [orgs, setOrgs] = useState<Organization[]>([]);
   const [loading, setLoading] = useState(true);
   const [fetchError, setFetchError] = useState('');
 
-  // Pagination
   const [page, setPage] = useState(1);
   const totalPages = Math.ceil(orgs.length / PAGE_SIZE);
   const paginatedOrgs = orgs.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
 
-  // Toast
   const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
 
-  // Modal
   const [modalOpen, setModalOpen] = useState(false);
   const [orgName, setOrgName] = useState('');
   const [orgCode, setOrgCode] = useState('');
   const [creating, setCreating] = useState(false);
   const [createError, setCreateError] = useState('');
 
-  // ── Guard: require token ─────────────────────────────────────────────
   useEffect(() => {
     if (!localStorage.getItem('superadmin_token')) {
       navigate('/');
     }
   }, [navigate]);
 
-  // ── Load organizations ───────────────────────────────────────────────
   const loadOrgs = useCallback(async () => {
     setLoading(true);
     setFetchError('');
@@ -89,20 +77,17 @@ export default function DashboardPage() {
     loadOrgs();
   }, [loadOrgs]);
 
-  // ── Toast auto-dismiss ───────────────────────────────────────────────
   useEffect(() => {
     if (!toast) return;
     const t = setTimeout(() => setToast(null), 3500);
     return () => clearTimeout(t);
   }, [toast]);
 
-  // ── Logout ───────────────────────────────────────────────────────────
   const handleLogout = () => {
     localStorage.removeItem('superadmin_token');
     navigate('/');
   };
 
-  // ── Create Organization ──────────────────────────────────────────────
   const handleCreate = async (e: React.FormEvent) => {
     e.preventDefault();
     setCreating(true);
@@ -128,13 +113,11 @@ export default function DashboardPage() {
     setModalOpen(true);
   };
 
-  // ─────────────────────────────────────────────────────────────────────
   return (
     <div className="flex h-screen bg-[#f4f6fb] overflow-hidden font-sans">
 
-      {/* ── Sidebar ─────────────────────────────────────────────────── */}
       <>
-        {/* Overlay (mobile) */}
+        
         {sidebarOpen && (
           <div
             className="fixed inset-0 bg-black/40 z-20 lg:hidden"
@@ -148,7 +131,7 @@ export default function DashboardPage() {
           transition-transform duration-300 ease-in-out
           ${sidebarOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
         `}>
-          {/* Brand */}
+          
           <div className="flex items-center gap-3 px-6 py-5 border-b border-white/10">
             <div className="w-9 h-9 bg-[#4f46e5] rounded-lg flex items-center justify-center shadow-lg shadow-indigo-900/40">
               <svg viewBox="0 0 24 24" fill="white" className="w-5 h-5">
@@ -161,7 +144,6 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          {/* Navigation */}
           <nav className="flex-1 px-3 py-4 flex flex-col gap-1">
             <NavItem
               icon={<LayoutDashboard className="w-4.5 h-4.5" />}
@@ -177,7 +159,6 @@ export default function DashboardPage() {
             />
           </nav>
 
-          {/* Logout */}
           <div className="px-3 py-4 border-t border-white/10">
             <button
               onClick={handleLogout}
@@ -190,10 +171,8 @@ export default function DashboardPage() {
         </aside>
       </>
 
-      {/* ── Main Content ────────────────────────────────────────────── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
-        {/* Top bar */}
         <header className="h-[68px] bg-white border-b border-slate-200 flex items-center px-6 gap-4 shrink-0 shadow-sm">
           <button
             onClick={() => setSidebarOpen(true)}
@@ -207,7 +186,7 @@ export default function DashboardPage() {
           </h2>
 
           <div className="ml-auto flex items-center gap-3">
-            {/* Avatar */}
+            
             <div className="flex items-center gap-2.5 border border-slate-200 rounded-full px-3 py-1.5 bg-white shadow-sm">
               <div className="w-8 h-8 rounded-full bg-[#4f46e5] flex items-center justify-center text-white font-bold text-xs shrink-0">
                 SA
@@ -221,13 +200,11 @@ export default function DashboardPage() {
           </div>
         </header>
 
-        {/* Page content */}
         <main className="flex-1 overflow-y-auto p-6 lg:p-8">
 
-          {/* ── Dashboard Tab ─── */}
           {activeTab === 'dashboard' && (
             <div className="max-w-4xl">
-              {/* Stat card */}
+              
               <div className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 inline-flex items-center gap-5 mb-8">
                 <div className="w-14 h-14 rounded-xl bg-[#eef0ff] flex items-center justify-center shrink-0">
                   <Building2 className="w-7 h-7 text-[#4f46e5]" />
@@ -243,7 +220,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Quick actions */}
               <h3 className="text-lg font-bold text-slate-700 mb-4">Quick Actions</h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg">
                 <QuickActionCard
@@ -262,10 +238,9 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── Organizations Tab ─── */}
           {activeTab === 'organizations' && (
             <div>
-              {/* Header row */}
+              
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-xl font-bold text-slate-800">Organizations</h3>
                 <button
@@ -277,9 +252,8 @@ export default function DashboardPage() {
                 </button>
               </div>
 
-              {/* Table card */}
               <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
-                {/* Table header */}
+                
                 <div className="grid grid-cols-[1fr_1fr_1fr_100px_60px] gap-4 px-6 py-3.5 border-b border-slate-100 bg-slate-50 text-xs font-bold text-slate-500 uppercase tracking-wide">
                   <span>Organization Name</span>
                   <span>Organization Code</span>
@@ -288,7 +262,6 @@ export default function DashboardPage() {
                   <span className="text-right">Actions</span>
                 </div>
 
-                {/* Body */}
                 {loading ? (
                   <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-400">
                     <Loader2 className="w-8 h-8 animate-spin text-indigo-400" />
@@ -311,7 +284,6 @@ export default function DashboardPage() {
                   ))
                 )}
 
-                {/* Pagination footer */}
                 {!loading && !fetchError && orgs.length > 0 && (
                   <div className="flex items-center justify-between px-6 py-4 border-t border-slate-100 bg-slate-50">
                     <p className="text-xs text-slate-500 font-medium">
@@ -350,11 +322,10 @@ export default function DashboardPage() {
         </main>
       </div>
 
-      {/* ── Create Organization Modal ──────────────────────────────── */}
       {modalOpen && (
         <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-white rounded-3xl shadow-2xl w-full max-w-[460px] overflow-hidden">
-            {/* Modal header */}
+            
             <div className="flex items-center justify-between px-7 py-5 border-b border-slate-100">
               <h3 className="text-lg font-extrabold text-slate-900">Create Organization</h3>
               <button
@@ -365,10 +336,8 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            {/* Modal body */}
             <form onSubmit={handleCreate} className="px-7 py-6 flex flex-col gap-5">
 
-              {/* API error */}
               {createError && (
                 <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 text-sm font-semibold">
                   <AlertCircle className="w-4 h-4 shrink-0" />
@@ -376,7 +345,6 @@ export default function DashboardPage() {
                 </div>
               )}
 
-              {/* Organization Name */}
               <div className="flex flex-col gap-2 text-left">
                 <label htmlFor="org-name" className="text-[13px] font-bold text-slate-700">
                   Organization Name
@@ -393,7 +361,6 @@ export default function DashboardPage() {
                 <p className="text-[11px] text-slate-400 font-medium">Enter the full name of the organization.</p>
               </div>
 
-              {/* Organization Code */}
               <div className="flex flex-col gap-2 text-left">
                 <label htmlFor="org-code" className="text-[13px] font-bold text-slate-700">
                   Organization Code
@@ -410,7 +377,6 @@ export default function DashboardPage() {
                 <p className="text-[11px] text-slate-400 font-medium">Enter a unique code for the organization (e.g., ACME001).</p>
               </div>
 
-              {/* Note */}
               <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-indigo-50 border border-indigo-100">
                 <Info className="w-4 h-4 text-indigo-500 shrink-0 mt-0.5" />
                 <div>
@@ -419,7 +385,6 @@ export default function DashboardPage() {
                 </div>
               </div>
 
-              {/* Actions */}
               <div className="flex gap-3 pt-1">
                 <button
                   type="button"
@@ -442,7 +407,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* ── Toast ─────────────────────────────────────────────────── */}
       {toast && (
         <div className={`
           fixed bottom-6 right-6 z-50 flex items-center gap-3 px-5 py-4 rounded-2xl shadow-2xl text-sm font-semibold
@@ -460,8 +424,6 @@ export default function DashboardPage() {
     </div>
   );
 }
-
-// ─── Sub-components ──────────────────────────────────────────────────────────
 
 function NavItem({ icon, label, active, onClick }: {
   icon: React.ReactNode;

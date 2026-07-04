@@ -1,4 +1,3 @@
-// API utilities for User application — targets backend port 5001
 
 const BASE_URL = 'http://localhost:5001/api';
 

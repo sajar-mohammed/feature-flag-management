@@ -28,7 +28,6 @@ export const adminSignup = async (
     password: string,
     organizationCode: string
 ) => {
-    // Find organization
     const organization = await organizationRepository.findByCode(
         organizationCode
     );
@@ -37,17 +36,14 @@ export const adminSignup = async (
         throw new Error("Organization not found");
     }
 
-    // Check existing user
     const existingUser = await userRepository.findByEmail(email);
 
     if (existingUser) {
         throw new Error("Email already registered");
     }
 
-    // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create user
     return userRepository.createUser({
         name,
         email,

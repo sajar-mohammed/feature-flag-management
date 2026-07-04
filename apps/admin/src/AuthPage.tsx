@@ -12,14 +12,12 @@ export default function AuthPage() {
   const navigate = useNavigate();
   const [tab, setTab] = useState<Tab>('login');
 
-  // ── Login state ──────────────────────────────────────────────────────
   const [loginEmail, setLoginEmail] = useState('');
   const [loginPassword, setLoginPassword] = useState('');
   const [showLoginPw, setShowLoginPw] = useState(false);
   const [loginLoading, setLoginLoading] = useState(false);
   const [loginError, setLoginError] = useState('');
 
-  // ── Signup state ─────────────────────────────────────────────────────
   const [signupName, setSignupName] = useState('');
   const [signupEmail, setSignupEmail] = useState('');
   const [signupPassword, setSignupPassword] = useState('');
@@ -29,7 +27,6 @@ export default function AuthPage() {
   const [signupError, setSignupError] = useState('');
   const [signupSuccess, setSignupSuccess] = useState('');
 
-  // ── Handlers ─────────────────────────────────────────────────────────
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoginLoading(true);
@@ -59,7 +56,6 @@ export default function AuthPage() {
         organizationCode: signupCode.toUpperCase(),
       });
       setSignupSuccess('Account created! You can now log in.');
-      // Prefill login tab
       setLoginEmail(signupEmail);
       setLoginPassword(signupPassword);
       setTimeout(() => setTab('login'), 1500);
@@ -73,13 +69,11 @@ export default function AuthPage() {
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row font-sans bg-white select-none">
 
-      {/* ── LEFT PANEL ─────────────────────────────────────────────────── */}
       <div className="w-full lg:w-[45%] bg-[#5022e6] text-white p-8 lg:p-14 flex flex-col justify-between items-center lg:items-stretch relative overflow-hidden min-h-[420px] lg:min-h-screen">
-        {/* Glow orbs */}
+        
         <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[60%] rounded-full bg-[#7042ff]/30 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[50%] rounded-full bg-[#3d18bf]/50 blur-[100px] pointer-events-none" />
 
-        {/* Badge */}
         <div className="z-10 flex justify-center lg:justify-start w-full">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-md text-white/90 text-xs font-semibold tracking-wider uppercase shadow-inner">
             <span className="relative flex h-2 w-2">
@@ -90,9 +84,8 @@ export default function AuthPage() {
           </div>
         </div>
 
-        {/* Hero */}
         <div className="z-10 flex flex-col justify-center items-center lg:items-start text-center lg:text-left my-auto max-w-lg w-full">
-          {/* Logo icon */}
+          
           <div className="w-16 h-16 bg-white/15 backdrop-blur-md rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-black/10 border border-white/20">
             <Flag className="w-8 h-8 text-white" />
           </div>
@@ -104,7 +97,6 @@ export default function AuthPage() {
             Manage and toggle your organization's feature flags in real-time. Control rollouts, experiments, and releases with confidence.
           </p>
 
-          {/* Feature highlights */}
           <div className="flex flex-col gap-4 w-full max-w-sm">
             {[
               { icon: <Flag className="w-4 h-4" />, text: 'Create and manage feature flags' },
@@ -126,13 +118,11 @@ export default function AuthPage() {
         </div>
       </div>
 
-      {/* ── RIGHT PANEL ────────────────────────────────────────────────── */}
       <div className="w-full lg:w-[55%] flex flex-col justify-between p-8 lg:p-14 bg-[#f8f9fc] min-h-[600px] lg:min-h-screen">
         <div className="hidden lg:block h-4" />
 
         <div className="max-w-[460px] w-full mx-auto my-auto py-6">
 
-          {/* Tab switcher */}
           <div className="flex gap-1 p-1 bg-white rounded-2xl shadow-sm border border-slate-200 mb-8">
             {(['login', 'signup'] as Tab[]).map((t) => (
               <button
@@ -149,7 +139,6 @@ export default function AuthPage() {
             ))}
           </div>
 
-          {/* ── LOGIN FORM ─────────────────────────────────────────── */}
           {tab === 'login' && (
             <div>
               <div className="mb-7">
@@ -209,7 +198,6 @@ export default function AuthPage() {
             </div>
           )}
 
-          {/* ── SIGNUP FORM ────────────────────────────────────────── */}
           {tab === 'signup' && (
             <div>
               <div className="mb-7">
@@ -304,7 +292,6 @@ export default function AuthPage() {
 
         </div>
 
-        {/* Footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-3 text-xs font-semibold text-slate-400 border-t border-slate-200 pt-6 mt-auto w-full max-w-[460px] mx-auto lg:max-w-none">
           <span>© 2026 FlagEngine Technologies Inc.</span>
           <div className="flex items-center gap-4">
@@ -318,8 +305,6 @@ export default function AuthPage() {
     </div>
   );
 }
-
-// ─── Shared sub-components ───────────────────────────────────────────────────
 
 function FormField({ label, htmlFor, children }: { label: string; htmlFor: string; children: React.ReactNode }) {
   return (

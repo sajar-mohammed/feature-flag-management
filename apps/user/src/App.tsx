@@ -13,12 +13,10 @@ import {
 import { checkFeature } from './api';
 
 export default function App() {
-  // Input states
   const [orgCode, setOrgCode] = useState('');
   const [featureKey, setFeatureKey] = useState('');
   const [formError, setFormError] = useState('');
 
-  // Flow states
   const [loading, setLoading] = useState(false);
   const [checkedResult, setCheckedResult] = useState<{
     orgCode: string;
@@ -49,7 +47,6 @@ export default function App() {
       if (!response.success && response.message) {
         setFormError(response.message);
       } else {
-        // Successful check
         const now = new Date();
         const formattedDate = now.toLocaleDateString('en-US', {
           month: 'short',
@@ -84,10 +81,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-[#f8fafc] text-slate-800 font-sans flex flex-col justify-between p-4 sm:p-6 select-none">
       
-      {/* ── TOP BAR HEADER ────────────────────────────────────────────── */}
       <header className="w-full max-w-7xl mx-auto bg-white rounded-2xl shadow-sm border border-slate-100 px-6 py-4 flex items-center justify-between">
         <div className="flex items-center">
-          {/* Logo flag shape */}
+          
           <div className="w-8 h-8 bg-[#4f46e5] rounded-lg flex items-center justify-center shadow-md shadow-indigo-500/20 mr-3 shrink-0">
             <svg viewBox="0 0 24 24" fill="white" className="w-4.5 h-4.5">
               <path d="M4 4h4v4H4V4zm0 8h4v4H4v-4zm8-8h4v4h-4V4zm0 8h4v4h-4v-4zM4 0h4v2H4V0zm8 0h4v2h-4V0zM4 20h4v4H4v-4zm8 0h4v4h-4v-4z" />
@@ -108,7 +104,6 @@ export default function App() {
         </a>
       </header>
 
-      {/* ── HERO HEADER TITLE ─────────────────────────────────────────── */}
       <div className="text-center mt-10 mb-2">
         <h1 className="text-3xl sm:text-4xl font-black text-slate-900 tracking-tight">
           Organization Feature Checker
@@ -119,10 +114,8 @@ export default function App() {
         </p>
       </div>
 
-      {/* ── MAIN WORKSPACE ────────────────────────────────────────────── */}
       <div className="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-6 items-stretch mt-8 mb-10">
         
-        {/* LEFT COLUMN: Input form card */}
         <div className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/50 p-6 lg:p-8 flex flex-col justify-between text-left">
           <div>
             <div className="flex items-center gap-3.5 mb-6">
@@ -145,7 +138,6 @@ export default function App() {
                 </div>
               )}
 
-              {/* Organization Code Input */}
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="org-code" className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                   Organization Code
@@ -169,7 +161,6 @@ export default function App() {
                 </span>
               </div>
 
-              {/* Feature Key Input */}
               <div className="flex flex-col gap-1.5">
                 <label htmlFor="feature-key" className="text-xs font-extrabold text-slate-500 uppercase tracking-wider">
                   Feature Key
@@ -193,7 +184,6 @@ export default function App() {
                 </span>
               </div>
 
-              {/* Submit Button */}
               <button
                 type="submit"
                 disabled={loading}
@@ -215,7 +205,6 @@ export default function App() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: Result visualization card */}
         <div className="flex flex-col justify-stretch">
           {loading ? (
             /* LOADING STATE */
@@ -330,7 +319,6 @@ export default function App() {
 
       </div>
 
-      {/* ── BOTTOM PANEL: How it works banner ─────────────────────────── */}
       <section 
         id="how-it-works"
         className="w-full max-w-6xl mx-auto bg-indigo-50/50 border border-indigo-100 rounded-3xl p-6 sm:p-8 text-left mt-4"
@@ -341,7 +329,7 @@ export default function App() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          {/* Step 1 */}
+          
           <div className="flex items-start gap-4">
             <div className="flex items-center justify-center shrink-0 w-8 h-8 rounded-full bg-[#4f46e5] text-white font-extrabold text-xs">
               1
@@ -357,7 +345,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Step 2 */}
           <div className="flex items-start gap-4">
             <div className="flex items-center justify-center shrink-0 w-8 h-8 rounded-full bg-[#4f46e5] text-white font-extrabold text-xs">
               2
@@ -373,7 +360,6 @@ export default function App() {
             </div>
           </div>
 
-          {/* Step 3 */}
           <div className="flex items-start gap-4">
             <div className="flex items-center justify-center shrink-0 w-8 h-8 rounded-full bg-[#4f46e5] text-white font-extrabold text-xs">
               3
@@ -391,7 +377,6 @@ export default function App() {
         </div>
       </section>
 
-      {/* ── FOOTER ────────────────────────────────────────────────────── */}
       <footer className="text-center text-xs font-semibold text-slate-400 py-8">
         © 2026 FlagControl. All rights reserved.
       </footer>
@@ -399,8 +384,6 @@ export default function App() {
     </div>
   );
 }
-
-// ─── Sub-component: row items in visual cards ──────────────────────────
 
 function ResultItemRow({ 
   label, 

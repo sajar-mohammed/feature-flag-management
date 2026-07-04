@@ -1,4 +1,3 @@
-// API utilities for the Admin app — targets backend at port 5001
 
 const BASE_URL = 'http://localhost:5001/api';
 
@@ -7,7 +6,6 @@ function getAuthHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export interface SignupPayload {
   name: string;
@@ -60,7 +58,6 @@ export async function loginAdmin(email: string, password: string): Promise<Login
   return data as LoginResponse;
 }
 
-// ─── Feature Flags ────────────────────────────────────────────────────────────
 
 export interface FeatureFlag {
   _id: string;

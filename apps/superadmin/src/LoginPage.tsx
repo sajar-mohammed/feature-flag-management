@@ -15,12 +15,10 @@ import { loginSuperAdmin } from './api';
 export default function LoginPage() {
   const navigate = useNavigate();
 
-  // Feature flag demo state
   const [searchActive, setSearchActive] = useState(true);
   const [darkModeActive, setDarkModeActive] = useState(true);
   const [rateLimitingActive, setRateLimitingActive] = useState(false);
 
-  // Form state
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -47,13 +45,11 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen w-full flex flex-col lg:flex-row font-sans bg-white select-none">
 
-      {/* ── LEFT PANEL ─────────────────────────────────────────────────── */}
       <div className="w-full lg:w-[48%] bg-[#5022e6] text-white p-8 lg:p-16 flex flex-col justify-between items-center lg:items-stretch relative overflow-hidden min-h-[500px] lg:min-h-screen">
-        {/* Glow blobs */}
+        
         <div className="absolute top-[-20%] left-[-10%] w-[80%] h-[60%] rounded-full bg-[#7042ff]/30 blur-[120px] pointer-events-none" />
         <div className="absolute bottom-[-10%] right-[-10%] w-[60%] h-[50%] rounded-full bg-[#3d18bf]/50 blur-[100px] pointer-events-none" />
 
-        {/* Enterprise badge */}
         <div className="z-10 flex justify-center lg:justify-start w-full">
           <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full border border-white/20 bg-white/10 backdrop-blur-md text-white/90 text-xs font-semibold tracking-wider uppercase shadow-inner">
             <span className="relative flex h-2 w-2">
@@ -64,7 +60,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Hero text + mockup */}
         <div className="z-10 flex flex-col justify-center items-center lg:items-start text-center lg:text-left my-auto max-w-xl w-full">
           <h1 className="text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight mt-6 mb-4">
             Feature Flag Management
@@ -73,9 +68,8 @@ export default function LoginPage() {
             Manage organizations and feature flags securely with the industry's most reliable control plane.
           </p>
 
-          {/* Feature flag demo card */}
           <div className="bg-[#f8fafc] rounded-[2.5rem] p-8 lg:p-10 w-full max-w-[440px] shadow-2xl flex flex-col gap-6 border border-slate-100 transform hover:scale-[1.02] transition-transform duration-300">
-            {/* Row 1 */}
+            
             <FeatureRow
               active={searchActive}
               onToggle={() => setSearchActive(!searchActive)}
@@ -84,7 +78,7 @@ export default function LoginPage() {
               sub="Algorithm"
               alwaysBlue={false}
             />
-            {/* Row 2 */}
+            
             <FeatureRow
               active={darkModeActive}
               onToggle={() => setDarkModeActive(!darkModeActive)}
@@ -93,7 +87,7 @@ export default function LoginPage() {
               sub="Beta"
               alwaysBlue={false}
             />
-            {/* Row 3 */}
+            
             <FeatureRow
               active={rateLimitingActive}
               onToggle={() => setRateLimitingActive(!rateLimitingActive)}
@@ -110,12 +104,11 @@ export default function LoginPage() {
         </div>
       </div>
 
-      {/* ── RIGHT PANEL ────────────────────────────────────────────────── */}
       <div className="w-full lg:w-[52%] flex flex-col justify-between p-8 lg:p-16 bg-white min-h-[600px] lg:min-h-screen">
         <div className="hidden lg:block h-6" />
 
         <div className="max-w-[440px] w-full mx-auto my-auto py-8">
-          {/* Heading */}
+          
           <div className="text-left mb-8">
             <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight mb-2">
               Super Admin Login
@@ -125,11 +118,9 @@ export default function LoginPage() {
             </p>
           </div>
 
-          {/* Form card */}
           <div className="bg-white rounded-3xl border border-slate-100 shadow-xl shadow-slate-100/70 p-6 lg:p-8">
             <form onSubmit={handleLogin} className="flex flex-col gap-5">
 
-              {/* Error */}
               {loginError && (
                 <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 text-sm font-semibold">
                   <ShieldAlert className="w-4 h-4 shrink-0" />
@@ -137,7 +128,6 @@ export default function LoginPage() {
                 </div>
               )}
 
-              {/* Email */}
               <div className="flex flex-col gap-2 text-left">
                 <label htmlFor="email" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Email Address
@@ -158,7 +148,6 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Password */}
               <div className="flex flex-col gap-2 text-left">
                 <div className="flex items-center justify-between">
                   <label htmlFor="password" className="text-xs font-bold text-slate-500 uppercase tracking-wider">
@@ -191,7 +180,6 @@ export default function LoginPage() {
                 </div>
               </div>
 
-              {/* Remember me */}
               <label className="flex items-center gap-3 cursor-pointer text-left">
                 <div className="relative flex items-center">
                   <input
@@ -211,7 +199,6 @@ export default function LoginPage() {
                 </span>
               </label>
 
-              {/* Submit */}
               <button
                 type="submit"
                 disabled={isLoading}
@@ -226,7 +213,6 @@ export default function LoginPage() {
           </div>
         </div>
 
-        {/* Footer */}
         <div className="flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-semibold text-slate-400 border-t border-slate-100 pt-8 mt-auto w-full max-w-[440px] mx-auto lg:max-w-none">
           <span>© 2026 FlagEngine Technologies Inc.</span>
           <div className="flex items-center gap-4">
@@ -240,8 +226,6 @@ export default function LoginPage() {
     </div>
   );
 }
-
-// ─── Sub-component: Feature Row ─────────────────────────────────────────────
 
 interface FeatureRowProps {
   active: boolean;

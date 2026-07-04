@@ -1,4 +1,3 @@
-// Central API configuration — all requests target the backend at port 5001
 
 const BASE_URL = 'http://localhost:5001/api';
 
@@ -7,7 +6,6 @@ function getAuthHeaders(): Record<string, string> {
   return token ? { Authorization: `Bearer ${token}` } : {};
 }
 
-// ─── Auth ─────────────────────────────────────────────────────────────────────
 
 export interface LoginResponse {
   success: boolean;
@@ -33,7 +31,6 @@ export async function loginSuperAdmin(
   return data as LoginResponse;
 }
 
-// ─── Organizations ─────────────────────────────────────────────────────────────
 
 export interface Organization {
   _id: string;
